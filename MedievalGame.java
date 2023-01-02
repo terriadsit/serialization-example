@@ -1,7 +1,14 @@
 import java.util.Scanner;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Objects;
+
 
 public class MedievalGame {
 
@@ -46,25 +53,49 @@ public class MedievalGame {
   /* Instance Methods */
   private Player start(Scanner console) {
     // Add start functionality here
-
-    return new Player("Test");
+    Player player;
+    Art.homeScreen();
+    
+    return player;
   } // End of start
 
   private void save() {
     // Add save functionality here
-    String fileName =  this.player.getName()  + ".svr";
-    System.out.println("fileName" + fileName);
-    //File yourFile = new File("score.txt");
-    //yourFile.createNewFile();
-    FileOutputStream userSaveFile = new FileOutputStream(fileName);
-   // ObjectOutputStream playerSaver = new ObjectOutputStream(userSaveFile);
-   // playerSaver.writeObject(this.player);
+    String playerFileName =  this.player.getName()  + ".svr";
+      
+    
+   try (FileOutputStream userSaveFile= new FileOutputStream(playerFileName)) {
+    ObjectOutputStream playerSaver = new ObjectOutputStream(userSaveFile);
+    playerSaver.writeObject(this.player);
+    System.out.println("in file output try");
+  } catch (IOException e) {
+    // TODO Auto-generated catch block
+    e.printStackTrace();
+    System.out.println("Unable to save player name");
+  }
+  
+
   } // End of save
 
   private Player load(String playerName, Scanner console) {
     // Add load functionality here
+    Player loadedPlayer;
+    String fileName = playerName + ".svr";
+    try {
+      FileInputStream fis = new FileInputStream(fileName);
+      ObjectInputStream ois = new ObjectInputStream(fis);
+      loadedPlayer = (Player) ois.readObject();
+    } catch (IOException | ClassNotFoundException e) {
+      // TODO: handle exception
+      e.printStackTrace();
+      this.addDelay(1500);
+      System.out.println("Unable to find player file " + playerName);
+      this.addDelay(2000);
+      loadedPlayer = new Player(playerName);
+    }
 
-    return new Player("Test");
+
+    return loadedPlayer;
   } // End of load
 
   // Adds a delay to the console so it seems like the computer is "thinking"
