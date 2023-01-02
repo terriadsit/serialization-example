@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Objects;
 
 public class MedievalGame {
@@ -50,7 +52,13 @@ public class MedievalGame {
 
   private void save() {
     // Add save functionality here
-    String fileName = player + ".svr";
+    String fileName =  this.player.getName()  + ".svr";
+    System.out.println("fileName" + fileName);
+    //File yourFile = new File("score.txt");
+    //yourFile.createNewFile();
+    FileOutputStream userSaveFile = new FileOutputStream(fileName);
+   // ObjectOutputStream playerSaver = new ObjectOutputStream(userSaveFile);
+   // playerSaver.writeObject(this.player);
   } // End of save
 
   private Player load(String playerName, Scanner console) {
